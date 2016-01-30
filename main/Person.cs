@@ -53,12 +53,10 @@ public class Person : MonoBehaviour {
     }
 	}
 
- IEnumerator updatePath(){
-     while(true)
-     {
-         yield return new WaitForSeconds(1);
-     }
- }
+  public void die (Vector3 directionOfDeath, int typeOfDeath) {
+    // entered a hazard
+    Debug.Log("ZOMG I'm dead");
+  }
 
   public bool isAtLocation(V2int pos) {
     Vector3 delta = transform.position - grid.positionForCoord(pos);
