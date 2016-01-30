@@ -18,7 +18,7 @@ public class V2int {
   public static V2int t  {get{return new V2int( 0,-1);}}
   public static V2int tr {get{return new V2int( 1,-1);}}
   public static V2int l  {get{return new V2int(-1, 0);}}
-  public static V2int r  {get{return new V2int( 0, 0);}}
+  public static V2int r  {get{return new V2int( 1, 0);}}
   public static V2int bl {get{return new V2int(-1, 1);}}
   public static V2int b  {get{return new V2int( 0, 1);}}
   public static V2int br {get{return new V2int( 1, 1);}}
