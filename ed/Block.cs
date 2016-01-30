@@ -11,9 +11,6 @@ public class Block : MonoBehaviour {
 	}
 
   public bool isNavigable() {
-    Debug.Log("Contents: " + contents.Any());
-    bool isNav = (!contents.Any()) || contents.TrueForAll(c=>c.isNavigable());
-    Debug.Log("isNav: " + isNav);
     return (!contents.Any()) || contents.TrueForAll(c=>c.isNavigable());
   }
 }

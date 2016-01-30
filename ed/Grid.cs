@@ -76,7 +76,6 @@ public class Grid : MonoBehaviour {
     for (int x=0;x<width;x++) {
       for (int z=0;z<height;z++) {
         result[x,z] = gridContents[x,z].isNavigable();
-        Debug.Log("X: " + x + ", Z: " +z + ", " +result[x,z]);
       }
     }
     return result;
