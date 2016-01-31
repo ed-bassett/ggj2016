@@ -28,7 +28,7 @@ public class Hazard : MonoBehaviour
 	private float	startTime;      // used by moving hazards
 
 
-	void Start ()
+	public void init ()
 	{
 		// turn off the red trigger visual
 		GetComponent<Renderer>().enabled = false;
