@@ -19,6 +19,7 @@ public class Grid : MonoBehaviour {
   public float size = 1f;
   public int randomSeed = 0;
   public V2int doorLocation = new V2int(7,5);
+  public V2int orderLocation = new V2int(17,17);
   public Vector3 chairOffset = Vector3.up * .5f;
 
   public Block blockPrefab;
@@ -31,6 +32,7 @@ public class Grid : MonoBehaviour {
   public BlockWall backWallPrefab;
   public BlockCounter counterPrefab;
   public BlockBehindCounter behindCounterPrefab;
+  public BlockOrderLocation orderLocationPrefab;
 
   public Transform props;
 
@@ -94,9 +96,13 @@ public class Grid : MonoBehaviour {
                 createBlockContent<BlockBehindCounter>(block, behindCounterPrefab.gameObject);
               }
             } else {
-              bool isTable = Random.Range(0,7)==1;
-              if (isTable) {
-                createBlockContent<BlockTable>(block, tablePrefab.gameObject);
+              if ( orderLocation == new V2int(x,z) ) {
+                createBlockContent<BlockOrderLocation>(block, orderLocationPrefab.gameObject);
+              } else {
+                bool isTable = Random.Range(0,7)==1;
+                if (isTable) {
+                  createBlockContent<BlockTable>(block, tablePrefab.gameObject);
+                }
               }
             }
           } else {
