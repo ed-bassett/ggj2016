@@ -13,11 +13,30 @@ public class Person : MonoBehaviour {
   public bool hasOrdered = false;
   float startedDrinkingCoffeeAt = Mathf.Infinity;
   public bool hasDrunkCoffee = false;
+
+	public Material[] heads, bodies, legs;
+	public Renderer myHead, myBody, myLegs;
+
 	// Use this for initialization
 	void Start () {
     goals = goalsContainer.GetComponentsInChildren<GoalMB>().ToList().ConvertAll(gmb=>gmb.goal).ToList();
     goals.ForEach(g=>g.init(this));
+
+		Debug.Log("Starting person script");
+
+		// randomize appearance
+		int randomHead = Random.Range(0, heads.Length);
+		myHead.material = heads[randomHead];
+
+		int randomBody = Random.Range(0, bodies.Length);
+		myBody.material = bodies[randomBody];
+
+		int randomLegs = Random.Range(0, legs.Length);
+		myLegs.material = legs[randomLegs];
+
 	}
+
+	
 	
   private float pathLastUpdated = 0;
   private List<V2int> path = null;
