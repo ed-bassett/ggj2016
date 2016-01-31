@@ -10,9 +10,12 @@ public class GUIManager : MonoBehaviour
 	public Button openStoreButton;
 	public int levelNumber;
 
+	private Manager manager;
+
 	void Start()
 	{
 		openStoreButton.gameObject.SetActive(false);
+		manager = GameObject.Find("Manager").GetComponent<Manager>();
 
 		if (levelNumber == 1) // first level
 			displayInstructions(1);
@@ -93,6 +96,8 @@ public class GUIManager : MonoBehaviour
 				continueButton.gameObject.SetActive(false);
 				instructionsText.gameObject.SetActive(false);
 				dayText.gameObject.SetActive(false);
+
+				manager.openStore();
 				break;
 
 			case 2: 

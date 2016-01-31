@@ -69,7 +69,7 @@ public class Person : MonoBehaviour {
             Quaternion newRotation = Quaternion.LookRotation(direction,Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation,newRotation,Time.deltaTime * 4f);
 
-            transform.position = transform.position + direction * .05f;
+            transform.position = transform.position + direction * 3 * Time.deltaTime;
           }
         break;
         case "GoalSitInChair":
