@@ -9,6 +9,10 @@ public class Person : MonoBehaviour {
   public Transform goalsContainer;
   public Transform goalIndicator = null;
   protected List<Goal> goals;
+  float placedOrderAt = Mathf.Infinity;
+  public bool hasOrdered = false;
+  float startedDrinkingCoffeeAt = Mathf.Infinity;
+  public bool hasDrunkCoffee = false;
 	// Use this for initialization
 	void Start () {
     goals = goalsContainer.GetComponentsInChildren<GoalMB>().ToList().ConvertAll(gmb=>gmb.goal).ToList();
@@ -49,6 +53,22 @@ public class Person : MonoBehaviour {
         case "GoalSitInChair":
           GoalSitInChair goalSitInChair = nextGoal as GoalSitInChair;
           _currentChair = goalSitInChair.chair;
+        break;
+        case "GoalOrderCoffee":
+          if ( Time.time < placedOrderAt ) {
+            placedOrderAt = Time.time;
+          }
+          if ( Time.time > placedOrderAt + 3f) {
+            hasOrdered = true;
+          }
+        break;
+        case "GoalDrinkCoffee":
+          if ( Time.time < startedDrinkingCoffeeAt ) {
+            startedDrinkingCoffeeAt = Time.time;
+          }
+          if ( Time.time > startedDrinkingCoffeeAt + 5f) {
+            hasDrunkCoffee = true;
+          }
         break;
         case "GoalSitInNearestChair":
           GoalSitInNearestChair goalSitInNearestChair = nextGoal as GoalSitInNearestChair;
