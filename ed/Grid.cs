@@ -158,6 +158,11 @@ public class Grid : MonoBehaviour {
   }
 
   public bool isValidChairPosition(V2int pos) {
-    return gridContents[pos.x,pos.y].isChairable();
+    if ( gridContents[pos.x,pos.y].isChairable() ) {
+      //fixme: this only works because there are other blocks guaranteed to surround any chairable position
+      List<V2int> possibleTablePositions = new List<V2int>{pos + V2int.t,pos + V2int.b,pos + V2int.l,pos + V2int.r};
+      return possibleTablePositions.Any(p=>gridContents[p.x,p.y].contents.Any(c=>c is BlockTable) );
+    }
+    return false;
   }
 }
