@@ -47,6 +47,9 @@ public class Person : MonoBehaviour {
           }
           if (path != null) {
             Vector3 direction = (grid.positionForCoord(path.First()) - transform.position).normalized;
+            Quaternion newRotation = Quaternion.LookRotation(direction,Vector3.up);
+            transform.rotation = Quaternion.Lerp(transform.rotation,newRotation,Time.deltaTime * 4f);
+
             transform.position = transform.position + direction * .05f;
           }
         break;
