@@ -52,6 +52,9 @@ public class ChairManager : MonoBehaviour
 
 					//tell the floorManager that this space is now empty
 //					floorManager.toggleChair(hit.collider.GetComponent<Chair>().posX, hit.collider.GetComponent<Chair>().posY, false);
+          
+          Chair current = grid.removeChair(hit.collider.GetComponent<Chair>().pos);
+          currentChair = current.transform;
 				}
 			}
 		}
@@ -101,6 +104,7 @@ public class ChairManager : MonoBehaviour
 
 					// tell the floor manager there's now a chair here
 //					floorManager.toggleChair(chairX, chairY, true);
+          grid.addChair(grid.coordForPosition(currentChair.position),currentChair.GetComponent<Chair>());
 				}
 			}
 		}
