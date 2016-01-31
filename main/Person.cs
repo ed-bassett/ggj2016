@@ -7,6 +7,7 @@ public class Person : MonoBehaviour {
   public Manager manager;
   public Grid grid;
   public Transform goalsContainer;
+  public Transform goalIndicator = null;
   protected List<Goal> goals;
 	// Use this for initialization
 	void Start () {
@@ -30,6 +31,10 @@ public class Person : MonoBehaviour {
       switch(nextGoal.GetType().ToString()) {
         case "GoalLocation":
           GoalLocation goalLocation = nextGoal as GoalLocation;
+
+          if (goalIndicator != null) {
+            goalIndicator.position = grid.positionForCoord(goalLocation.pos);
+          }
 
           if (Time.time > pathLastUpdated + .5f) {
             PathFinder pathFinder = new PathFinder(manager,grid.navigable(),grid.coordForPosition(transform.position),goalLocation.pos);

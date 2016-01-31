@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class Manager : MonoBehaviour {
+  public bool isOpen = false;
   public List<Person> people;
   public List<Chair> chairs;
   public Grid grid;

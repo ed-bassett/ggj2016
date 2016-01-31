@@ -12,8 +12,10 @@ public class GoalSitInChair : Goal {
     this._chair = chair;
     init(person);
   }
-  override public List<Goal> populatePrerequisites(Person person) {
-    return new List<Goal>{new GoalLocation(person, _chair.grid.coordForPosition(_chair.transform.position))};
+  override public List<UpdatableGoal> populatePrerequisites(Person person) {
+    return new List<UpdatableGoal>{
+      new UpdatableGoal(new GoalLocation(person, _chair.grid.coordForPosition(_chair.transform.position)),()=>{})
+    };
   }
   override protected bool selfIsComplete(Person person) {
     return person.isSittingOn(chair);

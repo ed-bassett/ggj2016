@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ public class Goal {
   [System.NonSerialized]
   protected List<Goal> prerequisites;
   [System.NonSerialized]
-  protected List<Goal> inferedPrerequisites;
+  protected List<UpdatableGoal> inferedPrerequisites;
 
   public Transform prerequisiteContainer = null;
   private bool _hasBeenCompleted = false;
@@ -18,7 +19,7 @@ public class Goal {
     if (hasBeenCompleted) {
       return null;
     }
-    List<Goal> remaining = prerequisites.Concat(inferedPrerequisites).SkipWhile(p=>p.isComplete(person)).ToList();
+    List<Goal> remaining = prerequisites.Concat(inferedPrerequisites.ConvertAll(ug=>ug.goal)).SkipWhile(p=>p.isComplete(person)).ToList();
     if (remaining.Any()) {
       return remaining.First().nextGoal(person);
     }
@@ -30,7 +31,7 @@ public class Goal {
 
   protected bool isComplete(Person person) {
     if ( !hasBeenCompleted  ) {
-      _hasBeenCompleted = (prerequisites.Concat(inferedPrerequisites).SkipWhile(p=>p.isComplete(person)).Any() == false) && selfIsComplete(person);
+      _hasBeenCompleted = (prerequisites.Concat(inferedPrerequisites.ConvertAll(ug=>ug.goal)).SkipWhile(p=>p.isComplete(person)).Any() == false) && selfIsComplete(person);
     }
     return hasBeenCompleted;
   }
@@ -42,10 +43,23 @@ public class Goal {
     } else {
       prerequisites = new List<Goal>();
     }
+    inferedPrerequisites = populatePrerequisites(person);
     updatePrerequisites(person);
   }
   public void updatePrerequisites(Person person) {
-    inferedPrerequisites = populatePrerequisites(person);
+//    inferedPrerequisites = populatePrerequisites(person);
+    inferedPrerequisites.ForEach(ug=>ug.update());
   }
-  public virtual List<Goal> populatePrerequisites(Person person) {return new List<Goal>();}
+  public virtual List<UpdatableGoal> populatePrerequisites(Person person) {return new List<UpdatableGoal>();}
+}
+
+public class UpdatableGoal {
+  private Goal _goal;
+  private Action _update = ()=>{};
+  public UpdatableGoal(Goal goal, Action update) {
+    this._goal = goal;
+    this._update = update;
+  }
+  public Goal goal {get{return _goal;}}
+  public Action update {get{return _update;}}
 }

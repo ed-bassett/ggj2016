@@ -1,59 +1,54 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Chair : MonoBehaviour {
+public class Chair : BlockContent {
   public Grid grid;
 
   public Material normalMaterial, mouseOverMaterial;
   
   //[HideInInspector]
-  public int posX, posY; // stores where in the array it's placed - helps for removing it when picked up
+  public V2int pos; // stores where in the array it's placed - helps for removing it when picked up
 
   [HideInInspector]
   public bool selected; // true when the player picks it up
 
   private Renderer myRenderer;
-  private FloorManager floorManager;
   private ChairManager chairManager;
 
   
-  void Start () 
-  {
-    floorManager = GameObject.Find("FloorManager").GetComponent<FloorManager>();
+  void Start () {
     chairManager = GameObject.Find("ChairManager").GetComponent<ChairManager>();
     selected = false;
     myRenderer = GetComponent<Renderer>();
 
-    // find out where I am in the grid and save my posX and posY
+    // find out where I am in the grid and save my pos
     // this means chairs can be placed in the editor and they'll figure out their exact co-ordinates on their own
     float closestDistance = Mathf.Infinity;
     
-    for (int y = 0; y < floorManager.height; y++)
-    {
-      for (int x = 0; x < floorManager.width; x++)
-      {
+    for (int z = 0; z < grid.totalHeight; z++) {
+      for (int x = 0; x < grid.totalWidth; x++) {
         // only look at empty tiles
-        if (floorManager.isEmpty(x, y))
-        {
-          Vector3 searchPosition = new Vector3(x * floorManager.spacing, 0, y * floorManager.spacing);
-          float currentDistance = Vector3.Distance(transform.position, searchPosition);
+        if (grid.isValidChairPosition(new V2int(x, z)) ) {
+          V2int searchPosition = new V2int(x,z);
+          float currentDistance = (grid.coordForPosition(transform.position) - searchPosition).sqrMagnitude;
 
-          if (currentDistance < closestDistance)
-          {
+          if (currentDistance < closestDistance) {
             closestDistance = currentDistance;
-            posX = x;
-            posY = y;
+            pos = new V2int(x,z);
           }
         }
       }
     }
 
     // tell the floor manager there's a chair here
-    floorManager.toggleChair(posX, posY, true);
+    grid.addChair(pos, this);
 
     // snap the mesh to the correct location
-    transform.position = new Vector3(posX * floorManager.spacing, chairManager.chairOffset, posY * floorManager.spacing);
+    transform.position = grid.positionForCoord(pos) + grid.chairOffset;
   }
+
+  override public bool isNavigable() {return true;}
+  override public bool isChairable() {return false;}
   
   void OnMouseEnter ()
   {

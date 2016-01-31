@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,8 @@ public class GoalSitInNearestChair : Goal {
     this._manager = manager;
     init(person);
   }
-  override public List<Goal> populatePrerequisites(Person person) {
+
+  private Chair closestChair(Person person) {
     List<V2int> chairCoords = _manager.ChairAtCoord().Keys.ToList();
     List<V2int> otherPeopleCoords = _manager.PersonAtCoord().Where(v=>v.Value != person).ToList().ConvertAll(v=>v.Key);
     chairCoords.RemoveAll(c=>otherPeopleCoords.Contains(c));
@@ -27,10 +29,22 @@ public class GoalSitInNearestChair : Goal {
           nearestDistance = distance;
         }
       });
-      _chair = _manager.ChairAtCoord()[nearestCoord];
-      return new List<Goal>{new GoalLocation(person,_chair.grid.coordForPosition(_chair.transform.position))};
+      return _manager.ChairAtCoord()[nearestCoord];
     }
-    return new List<Goal>();
+    return null;
+  }
+
+  override public List<UpdatableGoal> populatePrerequisites(Person person) {
+    _chair = closestChair(person);
+    GoalLocation goal = new GoalLocation(person,_chair.grid.coordForPosition(_chair.transform.position));
+    Action updateSelf = ()=>{
+      Chair closest = closestChair(person);
+      _chair = closest;
+      goal.pos = _chair.grid.coordForPosition(_chair.transform.position);
+    };
+    return new List<UpdatableGoal>{
+      new UpdatableGoal(goal,updateSelf)
+    };
   }
   override protected bool selfIsComplete(Person person) {
     return person.isSittingOn(chair);

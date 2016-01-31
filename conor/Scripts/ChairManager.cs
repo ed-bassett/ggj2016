@@ -8,7 +8,8 @@ public class ChairManager : MonoBehaviour
 	public LayerMask floorLayerMask;
 	public LayerMask chairLayerMask;
 	[Tooltip("Drag the floormanager here")]
-	public FloorManager floorManager;
+//	public FloorManager floorManager;
+  public Grid grid;
 
 	[Tooltip("Materials for 2 chairStates")]
 	public Material chairNormal, chairPicked;
@@ -33,7 +34,6 @@ public class ChairManager : MonoBehaviour
 	{
 		Ray ray;
 		RaycastHit hit;
-		int chairX = 0, chairY = 0; // saves position of dropped chairs to tell floorManager
 
 		if (currentChair == null)
 		{
@@ -51,7 +51,7 @@ public class ChairManager : MonoBehaviour
 					hit.collider.GetComponent<Chair>().selected = true; // prevents it changing its material on mouse-over
 
 					//tell the floorManager that this space is now empty
-					floorManager.toggleChair(hit.collider.GetComponent<Chair>().posX, hit.collider.GetComponent<Chair>().posY, false);
+//					floorManager.toggleChair(hit.collider.GetComponent<Chair>().posX, hit.collider.GetComponent<Chair>().posY, false);
 				}
 			}
 		}
@@ -63,36 +63,29 @@ public class ChairManager : MonoBehaviour
 			{
 				// find closest empty floorTile to the ray hit location
 				float closestDistance = Mathf.Infinity;
-				Transform closestTile = null;
+        V2int closestPos = null;
 
-				for (int y = 0; y < floorManager.height; y++)
-				{
-					for (int x = 0; x < floorManager.width; x++)
-					{
+				for (int z = 0; z < grid.totalHeight; z++) {
+					for (int x = 0; x < grid.totalWidth; x++) {
 						// only look at empty tiles
-						if (floorManager.isEmpty(x, y))
-                        {
-							Vector3 searchPosition = new Vector3(x * floorManager.spacing, 0, y * floorManager.spacing);
-							//float currentDistance = Vector3.Distance(hit.point, floorManager.floorTiles[x, y].transform.position);
-							float currentDistance = Vector3.Distance(hit.point, searchPosition);
+            V2int pos = new V2int(x,z);
+            if ( grid.isValidChairPosition(pos) ) {
+              V2int searchPosition = new V2int(x,z);
+							float currentDistance = (grid.coordForPosition(hit.point) - searchPosition).sqrMagnitude;
 
-							if (currentDistance < closestDistance)
-							{
+							if (currentDistance < closestDistance) {
 								closestDistance = currentDistance;
-								closestTile = floorManager.floorTiles[x, y].transform;
-								chairX = x;
-								chairY = y;
+								closestPos = pos;
 							}
 						}
 					}
 				}
 
 				// position the chair
-				currentChair.position = new Vector3(closestTile.position.x, closestTile.position.y + chairOffset, closestTile.position.z);
+				currentChair.position = grid.positionForCoord(closestPos) + grid.chairOffset;
 
 				// update its internal x and y storage
-				currentChair.GetComponent<Chair>().posX = chairX;
-				currentChair.GetComponent<Chair>().posY = chairY;
+        currentChair.GetComponent<Chair>().pos = closestPos;
 			}
 
 			if (Input.GetMouseButtonDown(0)) // player clicked - drop the chair
@@ -107,7 +100,7 @@ public class ChairManager : MonoBehaviour
 					currentChair = null;
 
 					// tell the floor manager there's now a chair here
-					floorManager.toggleChair(chairX, chairY, true);
+//					floorManager.toggleChair(chairX, chairY, true);
 				}
 			}
 		}

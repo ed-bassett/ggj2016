@@ -15,13 +15,13 @@ public class V2int {
   public int y {get{return _y;}}
   public float sqrMagnitude {get{return _x * _x + _y * _y;}}
 
-  public static V2int tl {get{return new V2int(-1,-1);}}
-  public static V2int t  {get{return new V2int( 0,-1);}}
-  public static V2int tr {get{return new V2int( 1,-1);}}
+  public static V2int tl {get{return new V2int(-1, 1);}}
+  public static V2int t  {get{return new V2int( 0, 1);}}
+  public static V2int tr {get{return new V2int( 1, 1);}}
   public static V2int r  {get{return new V2int( 1, 0);}}
-  public static V2int br {get{return new V2int( 1, 1);}}
-  public static V2int b  {get{return new V2int( 0, 1);}}
-  public static V2int bl {get{return new V2int(-1, 1);}}
+  public static V2int br {get{return new V2int( 1,-1);}}
+  public static V2int b  {get{return new V2int( 0,-1);}}
+  public static V2int bl {get{return new V2int(-1,-1);}}
   public static V2int l  {get{return new V2int(-1, 0);}}
   public static V2int operator +(V2int a, V2int b) {
     return new V2int(a.x+b.x,a.y+b.y);
