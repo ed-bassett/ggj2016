@@ -99,12 +99,11 @@ public class ChairManager : MonoBehaviour
 					currentChair.GetComponent<Renderer>().material = chairNormal;
 					currentChair.GetComponent<Chair>().selected = false; // allow it to change material again
 					
+          // tell the grid there's now a chair here
+          grid.addChair(grid.coordForPosition(currentChair.position),currentChair.GetComponent<Chair>());
+
 					// drop it
 					currentChair = null;
-
-					// tell the floor manager there's now a chair here
-//					floorManager.toggleChair(chairX, chairY, true);
-          grid.addChair(grid.coordForPosition(currentChair.position),currentChair.GetComponent<Chair>());
 				}
 			}
 		}
